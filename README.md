@@ -1,81 +1,54 @@
-# LastMile IQ - Intelligent Last-Mile Delivery Management Platform
+﻿# LastMile IQ - Intelligent Last-Mile Delivery Management Platform
+
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)](https://last-mile-delivery-tracker-mocha-three.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-16.3.2-black?logo=next.js)](https://nextjs.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-PostgreSQL-2D3748?logo=prisma)](https://www.prisma.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
+
+> 🚀 **Live Deployment URL**: [https://last-mile-delivery-tracker-mocha-three.vercel.app](https://last-mile-delivery-tracker-mocha-three.vercel.app)
 
 A production-ready logistics and last-mile delivery tracking platform featuring dynamic rate calculation, intelligent spatial auto-assignment, role-based workflows (Admin, Customer, Delivery Agent), immutable tracking history, failed delivery rescheduling, and automated customer notifications.
 
 ---
 
-## Key Features
+## 🌟 Key Features
 
-- ? **Dynamic Rate Calculation Engine**:
-  - Computes Volumetric Weight $\frac{L \times B \times H}{5000}\text{ kg}$ vs Actual Weight.
-  - Bills on $\max(\text{Actual Weight}, \text{Volumetric Weight})$.
+- ⚡ **Dynamic Rate Calculation Engine**:
+  - Computes Volumetric Weight: `Volumetric Weight (kg) = (L * W * H) / 5000`.
+  - Bills on Chargeable Weight: `max(Actual Weight, Volumetric Weight)`.
   - Automatic Zone Detection (`INTRA_ZONE` vs `INTER_ZONE`).
   - Admin-configurable Rate Cards for `B2B` & `B2C` (Base Weight, Base Rate, Incremental Rate per kg, Min Charge).
-  - Configurable COD Surcharges (Fixed fee or Percentage with minimum).
+  - Configurable COD Surcharges (Fixed fee or Percentage with minimum floor).
   - Real-time live quotation preview on order creation.
-- ?? **Intelligent Auto-Assignment**:
+- 📍 **Intelligent Spatial Auto-Assignment**:
   - Scored assignment based on Haversine spatial proximity, zone residency, and driver workload balancing.
   - Driver capacity limits and 1-click manual override for operations admins.
-- ??? **Immutable Tracking Audit Trail**:
-  - Append-only event history with actor details, timestamps, notes, and locations for every status transition.
-- ?? **Failed Delivery & Reschedule Flow**:
-  - Structured failure recording $\rightarrow$ Customer notification $\rightarrow$ Self-service customer date picker $\rightarrow$ Automated agent re-assignment.
-- ?? **Multi-Channel Notification Dispatcher**:
+- 📜 **Immutable Tracking Audit Trail**:
+  - Append-only event history with actor details, timestamps, notes, and coordinates for every status transition.
+- 🔄 **Failed Delivery & Reschedule Flow**:
+  - Structured failure recording -> Customer notification -> Self-service customer date picker -> Automated agent re-assignment.
+- 🔔 **Multi-Channel Notification Dispatcher**:
   - Automated Email & SMS alerts dispatched for confirmation, assignment, transit, delivery, and failure events.
   - In-app Notification Center and database audit logs.
-- ?? **1-Click Role Switcher**:
-  - Instant demo switcher between Admin, B2C Customer, B2B Customer, and Regional Delivery Agents.
+- 👤 **1-Click Role Switcher**:
+  - Instant demo switcher between Admin, B2C Customer, B2B Customer, and Regional Delivery Agents without typing passwords.
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14+ (App Router) with TypeScript
+- **Framework**: Next.js 16 (App Router, Turbopack) with TypeScript
 - **Styling**: Tailwind CSS & Lucide Icons
-- **Database & ORM**: SQLite (via Prisma ORM 5.22 LTS) � Zero-friction local startup, 1-click switchable to PostgreSQL for cloud deployment.
-- **Authentication**: Role-based JWT session cookies (`ADMIN`, `CUSTOMER`, `AGENT`).
+- **Database & ORM**: PostgreSQL via Prisma ORM 5.22
+- **Authentication**: Role-based JWT session cookies (`ADMIN`, `CUSTOMER`, `AGENT`) with bcrypt password hashing
 
 ---
 
-## Quick Start & Setup Guide
+## 🚀 Live Demo & Accounts
 
-### 1. Prerequisites
-- Node.js 18+ (Node.js 20+ / 24+ supported)
-- npm or pnpm
+**Live URL**: [https://last-mile-delivery-tracker-mocha-three.vercel.app](https://last-mile-delivery-tracker-mocha-three.vercel.app)
 
-### 2. Clone & Install Dependencies
-```bash
-git clone <repository-url>
-cd last-mile-delivery-tracker
-npm install
-```
-
-### 3. Setup Environment Variables
-Create a `.env` file in the root directory (or copy from `.env.example`):
-```env
-DATABASE_URL="file:./dev.db"
-JWT_SECRET="super-secret-jwt-key-for-last-mile-tracker-2026"
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-```
-
-### 4. Initialize Database & Seed Demo Data
-```bash
-# Push schema to SQLite
-npx prisma db push
-
-# Seed realistic demo zones, rate cards, users, and orders
-npx tsx prisma/seed.ts
-```
-
-### 5. Start Development Server
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## Demo Accounts (1-Click Switcher or Manual Login)
+You can use the **1-Click Role Switcher Bar** at the top of the app or login manually with these demo credentials:
 
 | Role | Email | Password | Description |
 |------|-------|----------|-------------|
@@ -90,7 +63,50 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## Rate Calculation Engine Logic
+## 💻 Local Setup & Quick Start
+
+### 1. Prerequisites
+- Node.js 18+ (Node.js 20+ / 22+ recommended)
+- npm, pnpm, or yarn
+
+### 2. Clone & Install Dependencies
+```bash
+git clone https://github.com/Tech-Savant20/last-mile-delivery-tracker.git
+cd last-mile-delivery-tracker
+npm install
+```
+
+### 3. Setup Environment Variables
+Create a `.env` file in the root directory:
+```env
+DATABASE_URL="postgres://username:password@host:5432/dbname?sslmode=require"
+JWT_SECRET="super-secret-jwt-key-for-last-mile-tracker-2026"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+```
+
+### 4. Initialize Database & Seed Demo Data
+```bash
+# Push schema to PostgreSQL database
+npm run db:push
+
+# Seed realistic demo zones, rate cards, users, and orders
+npm run seed
+```
+
+### 5. Start Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 6. Run Automated Test Suite
+```bash
+npm test
+```
+
+---
+
+## 📐 Rate Calculation Engine Logic
 
 ### Mathematical Formulation
 1. **Volumetric Weight**:
@@ -100,29 +116,29 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 3. **Extra Weight**:
    $$\text{Extra Weight} = \max(0, \text{Chargeable Weight} - \text{Base Weight})$$
 4. **Shipping Charge**:
-   $$\text{Shipping Charge} = \max\left(\text{Min Charge}, \text{Base Rate} + \lceil \text{Extra Weight} \rceil \times \text{Per Extra Kg Rate}\right)$$
+   $$\text{Shipping Charge} = \max(\text{Min Charge}, \text{Base Rate} + \lceil \text{Extra Weight} \rceil \times \text{Per Extra Kg Rate})$$
 5. **COD Surcharge**:
-   - `PREPAID`: $\$0.00$
+   - `PREPAID`: $0.00
    - `COD (Fixed)`: $\max(\text{Min Fee}, \text{Fee Value})$
-   - `COD (Percentage)`: $\max\left(\text{Min Fee}, \text{Declared Value} \times \frac{\text{Fee Value}}{100}\right)$
+   - `COD (Percentage)`: $\max(\text{Min Fee}, \text{Declared Value} \times \frac{\text{Fee Value}}{100})$
 6. **Total Charge**:
    $$\text{Total Charge} = \text{Shipping Charge} + \text{COD Surcharge}$$
 
 ### Example Calculation
 A retail customer books a **B2C COD** package from **Connaught Place (North Zone)** to **Saket (South Zone)**:
-- Dimensions: $25\text{cm} \times 20\text{cm} \times 15\text{cm}$, Actual Weight: $1.2\text{kg}$, Declared Value: $\$80.00$.
-- Volumetric Weight = $\frac{25 \times 20 \times 15}{5000} = 1.50\text{kg}$.
-- Chargeable Weight = $\max(1.2, 1.5) = 1.50\text{kg}$ (Volumetric applied).
-- Route: North $\rightarrow$ South $\rightarrow$ `INTER_ZONE`.
-- Rate Card (`B2C` `INTER_ZONE`): Base Weight: $0.5\text{kg}$, Base Rate: $\$70.00$, Extra Rate: $\$35.00/\text{kg}$.
-- Extra Weight = $1.5 - 0.5 = 1.0\text{kg} \rightarrow 1 \times \$35 = \$35.00$.
-- Base Shipping = $\$70.00 + \$35.00 = \$105.00$.
-- COD Surcharge (`B2C` Fixed) = $\$30.00$.
-- **Total Customer Charge = $\$105.00 + \$30.00 = \$135.00$**.
+- Dimensions: 25cm x 20cm x 15cm, Actual Weight: 1.2kg, Declared Value: $80.00.
+- Volumetric Weight = (25 x 20 x 15) / 5000 = 1.50kg.
+- Chargeable Weight = max(1.2, 1.5) = 1.50kg (Volumetric applied).
+- Route: North -> South -> `INTER_ZONE`.
+- Rate Card (`B2C` `INTER_ZONE`): Base Weight: 0.5kg, Base Rate: $70.00, Extra Rate: $35.00/kg.
+- Extra Weight = 1.5 - 0.5 = 1.0kg -> 1 x $35 = $35.00.
+- Base Shipping = $70.00 + $35.00 = $105.00.
+- COD Surcharge (`B2C` Fixed) = $30.00.
+- **Total Customer Charge = $105.00 + $30.00 = $135.00**.
 
 ---
 
-## API Endpoints Documentation
+## 📡 API Endpoints Documentation
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
@@ -149,19 +165,21 @@ A retail customer books a **B2C COD** package from **Connaught Place (North Zone
 
 ---
 
-## Deployment to Cloud (Vercel / Render / Railway)
+## 🌐 Cloud Deployment (Vercel)
 
-### Deploying to Vercel:
-1. Push project to your GitHub repository.
-2. Import repository in [Vercel](https://vercel.com).
-3. Set environment variable `DATABASE_URL` (for cloud PostgreSQL e.g., Supabase / Neon / Railway PostgreSQL, or use Vercel Postgres / SQLite file for serverless).
-4. Run `npx prisma db push && npx tsx prisma/seed.ts` as build command or postinstall script.
+1. Push project to GitHub.
+2. Import repository on [Vercel](https://vercel.com).
+3. In **Settings -> Environment Variables**, configure:
+   - `DATABASE_URL`: PostgreSQL connection string (Prisma Postgres / Supabase / Neon)
+   - `JWT_SECRET`: Secret key for authentication
+   - `NEXT_PUBLIC_APP_URL`: `https://last-mile-delivery-tracker-mocha-three.vercel.app`
+4. Deploy / Redeploy project.
 
 ---
 
-## Deliverables Checklist
-- [x] Complete TypeScript Fullstack Source Code
-- [x] Comprehensive README with setup guide, API docs, and rate formula walkthrough
+## 📋 Deliverables Checklist
+- [x] Complete Next.js & TypeScript Fullstack Source Code
+- [x] Comprehensive README with setup guide, live deployment URL, API docs, and rate formula walkthrough
 - [x] System Design Write-up (`system_design.md`) under 800 words
 - [x] Zero hardcoded pricing (dynamic admin configurator)
-- [x] Automated test suite (`npx tsx tests/rate-engine.test.ts`) with 100% pass rate
+- [x] Automated test suite (`npm test`) with 100% pass rate
