@@ -99,64 +99,64 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
+      <div className="bg-white border border-[#dddddd] rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-850">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-              <Calculator className="w-5 h-5" />
+        <div className="p-5 border-b border-[#ebebeb] flex items-center justify-between bg-[#f7f7f7]/60">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#f7f7f7] border border-[#dddddd] text-[#222222] flex items-center justify-center">
+              <Calculator className="w-5 h-5 stroke-[2.2]" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Dynamic Rate Calculator</h3>
-              <p className="text-xs text-slate-400">
-                Formula: Higher of actual vs volumetric weight (L�W�H / 5000) + Zone Rate Card + COD Surcharge
+              <h3 className="text-base font-bold text-[#222222]">Dynamic Rate Engine Calculator</h3>
+              <p className="text-xs text-[#6a6a6a]">
+                Standard Formula: max(Actual Weight, L×W×H / 5000) × Zone Rate Card + COD Surcharges.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[#6a6a6a] hover:text-[#222222] hover:bg-[#ebebeb] transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-5 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 text-[#222222]">
           {/* Controls Form */}
-          <div className="space-y-4 text-xs text-slate-300">
+          <div className="space-y-4 text-xs">
             {/* Origin & Destination */}
-            <div className="space-y-3 p-3 bg-slate-800/40 rounded-xl border border-slate-700/60">
+            <div className="space-y-3 p-4 bg-[#f7f7f7] rounded-2xl border border-[#ebebeb]">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-[#222222] mb-1.5">
                   Pickup Area (Origin):
                 </label>
                 <select
                   value={pickupAreaId}
                   onChange={(e) => setPickupAreaId(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full bg-white border border-[#dddddd] focus:border-[#222222] rounded-xl px-3 py-2.5 text-[#222222] text-xs focus:outline-none"
                 >
                   {areas.map((a) => (
                     <option key={a.id} value={a.id}>
-                      {a.name} ({a.pincode}) - [{a.zone?.name || "Zone"}]
+                      {a.name} ({a.pincode}) — [{a.zone?.name || "Zone"}]
                     </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-[#222222] mb-1.5">
                   Drop Area (Destination):
                 </label>
                 <select
                   value={dropAreaId}
                   onChange={(e) => setDropAreaId(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full bg-white border border-[#dddddd] focus:border-[#222222] rounded-xl px-3 py-2.5 text-[#222222] text-xs focus:outline-none"
                 >
                   {areas.map((a) => (
                     <option key={a.id} value={a.id}>
-                      {a.name} ({a.pincode}) - [{a.zone?.name || "Zone"}]
+                      {a.name} ({a.pincode}) — [{a.zone?.name || "Zone"}]
                     </option>
                   ))}
                 </select>
@@ -166,13 +166,13 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
             {/* Order Type & Payment Type */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">Order Type:</label>
-                <div className="flex rounded-lg bg-slate-800 p-1 border border-slate-700">
+                <label className="block text-xs font-semibold text-[#222222] mb-1.5">Order Type:</label>
+                <div className="flex rounded-full bg-[#ebebeb] p-1">
                   <button
                     type="button"
                     onClick={() => setOrderType("B2C")}
-                    className={`flex-1 py-1 text-center rounded text-xs font-medium transition ${
-                      orderType === "B2C" ? "bg-cyan-600 text-white shadow" : "text-slate-400 hover:text-white"
+                    className={`flex-1 py-1.5 text-center rounded-full text-xs font-semibold transition ${
+                      orderType === "B2C" ? "bg-[#222222] text-white shadow-xs" : "text-[#6a6a6a] hover:text-[#222222]"
                     }`}
                   >
                     B2C Retail
@@ -180,8 +180,8 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setOrderType("B2B")}
-                    className={`flex-1 py-1 text-center rounded text-xs font-medium transition ${
-                      orderType === "B2B" ? "bg-indigo-600 text-white shadow" : "text-slate-400 hover:text-white"
+                    className={`flex-1 py-1.5 text-center rounded-full text-xs font-semibold transition ${
+                      orderType === "B2B" ? "bg-[#222222] text-white shadow-xs" : "text-[#6a6a6a] hover:text-[#222222]"
                     }`}
                   >
                     B2B Freight
@@ -190,13 +190,13 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">Payment Method:</label>
-                <div className="flex rounded-lg bg-slate-800 p-1 border border-slate-700">
+                <label className="block text-xs font-semibold text-[#222222] mb-1.5">Payment Method:</label>
+                <div className="flex rounded-full bg-[#ebebeb] p-1">
                   <button
                     type="button"
                     onClick={() => setPaymentType("PREPAID")}
-                    className={`flex-1 py-1 text-center rounded text-xs font-medium transition ${
-                      paymentType === "PREPAID" ? "bg-emerald-600 text-white shadow" : "text-slate-400 hover:text-white"
+                    className={`flex-1 py-1.5 text-center rounded-full text-xs font-semibold transition ${
+                      paymentType === "PREPAID" ? "bg-[#222222] text-white shadow-xs" : "text-[#6a6a6a] hover:text-[#222222]"
                     }`}
                   >
                     Prepaid
@@ -204,8 +204,8 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setPaymentType("COD")}
-                    className={`flex-1 py-1 text-center rounded text-xs font-medium transition ${
-                      paymentType === "COD" ? "bg-amber-600 text-white shadow" : "text-slate-400 hover:text-white"
+                    className={`flex-1 py-1.5 text-center rounded-full text-xs font-semibold transition ${
+                      paymentType === "COD" ? "bg-[#ff385c] text-white shadow-xs" : "text-[#6a6a6a] hover:text-[#222222]"
                     }`}
                   >
                     COD
@@ -215,39 +215,39 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
             </div>
 
             {/* Dimensions (L x W x H) */}
-            <div className="p-3 bg-slate-800/40 rounded-xl border border-slate-700/60 space-y-2">
-              <label className="block text-[11px] font-semibold text-slate-300">
+            <div className="p-4 bg-[#f7f7f7] rounded-2xl border border-[#ebebeb] space-y-2">
+              <label className="block text-xs font-semibold text-[#222222]">
                 Package Dimensions (cm):
               </label>
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <span className="text-[10px] text-slate-400">Length (L):</span>
+                  <span className="text-[10px] font-medium text-[#6a6a6a] block mb-1">Length:</span>
                   <input
                     type="number"
                     min="1"
                     value={lengthCm}
                     onChange={(e) => setLengthCm(Math.max(1, parseFloat(e.target.value) || 1))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white"
+                    className="w-full bg-white border border-[#dddddd] focus:border-[#222222] rounded-lg px-2.5 py-1.5 text-[#222222] text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400">Width (W):</span>
+                  <span className="text-[10px] font-medium text-[#6a6a6a] block mb-1">Width:</span>
                   <input
                     type="number"
                     min="1"
                     value={widthCm}
                     onChange={(e) => setWidthCm(Math.max(1, parseFloat(e.target.value) || 1))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white"
+                    className="w-full bg-white border border-[#dddddd] focus:border-[#222222] rounded-lg px-2.5 py-1.5 text-[#222222] text-xs focus:outline-none"
                   />
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400">Height (H):</span>
+                  <span className="text-[10px] font-medium text-[#6a6a6a] block mb-1">Height:</span>
                   <input
                     type="number"
                     min="1"
                     value={heightCm}
                     onChange={(e) => setHeightCm(Math.max(1, parseFloat(e.target.value) || 1))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white"
+                    className="w-full bg-white border border-[#dddddd] focus:border-[#222222] rounded-lg px-2.5 py-1.5 text-[#222222] text-xs focus:outline-none"
                   />
                 </div>
               </div>
@@ -256,7 +256,7 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
             {/* Weight & Declared Value */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-[#222222] mb-1.5">
                   Actual Weight (kg):
                 </label>
                 <input
@@ -265,12 +265,12 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
                   min="0.1"
                   value={actualWeightKg}
                   onChange={(e) => setActualWeightKg(Math.max(0.1, parseFloat(e.target.value) || 0.1))}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white"
+                  className="w-full bg-white border border-[#dddddd] focus:border-[#222222] rounded-xl px-3 py-2 text-[#222222] text-xs focus:outline-none font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-[#222222] mb-1.5">
                   Declared Value ($):
                 </label>
                 <input
@@ -278,13 +278,13 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
                   min="0"
                   value={declaredValue}
                   onChange={(e) => setDeclaredValue(Math.max(0, parseFloat(e.target.value) || 0))}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white"
+                  className="w-full bg-white border border-[#dddddd] focus:border-[#222222] rounded-xl px-3 py-2 text-[#222222] text-xs focus:outline-none"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="p-2.5 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300 text-[11px]">
+              <div className="p-3 bg-[#fff1f0] border border-[#ffccc7] rounded-xl text-[#c13515] text-xs">
                 {error}
               </div>
             )}
@@ -297,12 +297,12 @@ export const RateCalculatorModal: React.FC<RateCalculatorModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-850 flex justify-end">
+        <div className="p-4 border-t border-[#ebebeb] bg-[#f7f7f7]/60 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold transition"
+            className="px-5 py-2.5 bg-[#222222] hover:bg-black text-white rounded-full text-xs font-semibold transition active:scale-95"
           >
-            Close Calculator
+            Done
           </button>
         </div>
       </div>

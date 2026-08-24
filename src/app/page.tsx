@@ -201,7 +201,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-white text-[#222222] flex flex-col font-sans">
       {/* 1-Click Role Switcher */}
       <RoleDemoBar
         currentUser={currentUser}
@@ -220,27 +220,99 @@ export default function DashboardPage() {
         unreadCount={notificationCount}
       />
 
-      {/* Hero / Header Section */}
-      <main className="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex-1 space-y-6">
-        {/* Banner with Active View Context */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      {/* Hero / Main Content */}
+      <main className="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex-1 space-y-8">
+        {/* Airbnb Signature 3-Segment Pill Search Hero */}
+        <div className="pt-2 pb-2">
+          <div className="bg-white border border-[#dddddd] hover:border-[#c1c1c1] focus-within:border-[#222222] rounded-full p-2 pl-6 shadow-airbnb transition-all flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-[#ebebeb]">
+            {/* Segment 1: Search / Tracking # */}
+            <div className="flex-1 py-1 md:py-0 md:pr-4">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#222222] block">
+                Search Shipments
+              </span>
+              <div className="relative flex items-center">
+                <Search className="w-3.5 h-3.5 text-[#929292] absolute left-0" />
+                <input
+                  type="text"
+                  placeholder="Tracking #, drop address, or customer..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-6 bg-transparent text-xs font-semibold text-[#222222] placeholder-[#929292] focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Segment 2: Status */}
+            <div className="flex-1 py-1 md:py-0 md:px-4">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#222222] block">
+                Delivery Status
+              </span>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full bg-transparent text-xs font-semibold text-[#222222] focus:outline-none cursor-pointer"
+              >
+                <option value="ALL">All Delivery Statuses</option>
+                <option value="CREATED">Created</option>
+                <option value="ASSIGNED">Assigned</option>
+                <option value="PICKED_UP">Picked Up</option>
+                <option value="IN_TRANSIT">In Transit</option>
+                <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="FAILED">Failed Attempt</option>
+                <option value="RESCHEDULED">Rescheduled</option>
+              </select>
+            </div>
+
+            {/* Segment 3: Service Type */}
+            <div className="flex-1 py-1 md:py-0 md:px-4">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#222222] block">
+                Service Class
+              </span>
+              <select
+                value={orderTypeFilter}
+                onChange={(e) => setOrderTypeFilter(e.target.value)}
+                className="w-full bg-transparent text-xs font-semibold text-[#222222] focus:outline-none cursor-pointer"
+              >
+                <option value="ALL">All Service Classes</option>
+                <option value="B2C">B2C Retail Delivery</option>
+                <option value="B2B">B2B Freight Logistics</option>
+              </select>
+            </div>
+
+            {/* Rausch Search Orb / Action */}
+            <div className="pt-2 md:pt-0 md:pl-3 flex items-center justify-end">
+              <button
+                onClick={fetchOrders}
+                disabled={loadingOrders}
+                className="w-12 h-12 rounded-full bg-[#ff385c] hover:bg-[#e00b41] active:scale-95 text-white flex items-center justify-center shadow-sm transition disabled:opacity-50 shrink-0"
+                title="Search & Refresh"
+              >
+                <Search className={`w-5 h-5 stroke-[2.5] ${loadingOrders ? "animate-spin" : ""}`} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Header & Context */}
+        <div className="bg-[#f7f7f7] border border-[#ebebeb] rounded-2xl p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-wider font-mono">
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white text-[#222222] border border-[#dddddd] uppercase tracking-wider">
                 {currentUser?.role === "ADMIN"
-                  ? "Admin Operations Hub"
+                  ? "Admin Operations Console"
                   : currentUser?.role === "AGENT"
                   ? "Delivery Agent Field Portal"
                   : "Customer Shipment Portal"}
               </span>
-              <span className="text-xs text-slate-400 font-mono">Logged in as {currentUser?.name}</span>
+              <span className="text-xs text-[#6a6a6a]">Session: <strong>{currentUser?.name}</strong></span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#222222] tracking-tight">
               {currentUser?.role === "ADMIN"
-                ? "Fleet Logistics & Rate Management Console"
+                ? "Fleet Logistics & Dispatch Management"
                 : currentUser?.role === "AGENT"
-                ? "Active Dispatch Tasks & Route Progress"
-                : "My Shipments & Delivery Tracking"}
+                ? "Assigned Route & Package Progression"
+                : "Live Package Tracking & Management"}
             </h1>
           </div>
 
@@ -250,16 +322,16 @@ export default function DashboardPage() {
               <>
                 <button
                   onClick={() => setShowZoneManagerModal(true)}
-                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition"
+                  className="px-4 py-2 bg-white hover:bg-[#f2f2f2] text-[#222222] border border-[#dddddd] rounded-full text-xs font-semibold flex items-center gap-2 transition shadow-xs"
                 >
-                  <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                  <MapPin className="w-3.5 h-3.5 text-[#ff385c]" />
                   <span>Zones & Areas</span>
                 </button>
                 <button
                   onClick={() => setShowFleetManagerModal(true)}
-                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition"
+                  className="px-4 py-2 bg-white hover:bg-[#f2f2f2] text-[#222222] border border-[#dddddd] rounded-full text-xs font-semibold flex items-center gap-2 transition shadow-xs"
                 >
-                  <Users className="w-3.5 h-3.5 text-cyan-400" />
+                  <Users className="w-3.5 h-3.5 text-[#222222]" />
                   <span>Workforce Fleet</span>
                 </button>
               </>
@@ -267,126 +339,87 @@ export default function DashboardPage() {
 
             <button
               onClick={() => setShowRateCalcModal(true)}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition"
+              className="px-4 py-2 bg-white hover:bg-[#f2f2f2] text-[#222222] border border-[#dddddd] rounded-full text-xs font-semibold flex items-center gap-2 transition shadow-xs"
             >
-              <DollarSign className="w-3.5 h-3.5 text-amber-400" />
-              <span>Quote Calculator</span>
+              <DollarSign className="w-3.5 h-3.5 text-[#222222]" />
+              <span>Rate Calculator</span>
             </button>
           </div>
         </div>
 
-        {/* Analytics KPI Cards (for Admin & Overview) */}
+        {/* Analytics KPI Stat Cards */}
         {analytics && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-            <div className="p-3.5 bg-slate-900 border border-slate-800 rounded-xl shadow">
-              <span className="text-[11px] text-slate-400 block font-medium">Total Orders</span>
-              <p className="text-xl font-bold text-white mt-1">{analytics.totalOrders}</p>
-              <span className="text-[10px] text-blue-400 font-mono">B2C: {analytics.b2cCount} | B2B: {analytics.b2bCount}</span>
+            <div className="p-4 bg-white border border-[#ebebeb] hover:border-[#dddddd] rounded-2xl shadow-xs transition hover:shadow-airbnb">
+              <span className="text-[11px] text-[#6a6a6a] uppercase font-bold tracking-wider block">Total Orders</span>
+              <p className="text-2xl font-bold text-[#222222] mt-1">{analytics.totalOrders}</p>
+              <span className="text-[11px] text-[#6a6a6a] mt-1 block">B2C: {analytics.b2cCount} | B2B: {analytics.b2bCount}</span>
             </div>
 
-            <div className="p-3.5 bg-slate-900 border border-slate-800 rounded-xl shadow">
-              <span className="text-[11px] text-slate-400 block font-medium">Gross Revenue</span>
-              <p className="text-xl font-bold text-emerald-400 mt-1">${analytics.totalRevenue}</p>
-              <span className="text-[10px] text-slate-400 font-mono">Prepaid: {analytics.prepaidCount} | COD: {analytics.codCount}</span>
+            <div className="p-4 bg-white border border-[#ebebeb] hover:border-[#dddddd] rounded-2xl shadow-xs transition hover:shadow-airbnb">
+              <span className="text-[11px] text-[#6a6a6a] uppercase font-bold tracking-wider block">Gross Revenue</span>
+              <p className="text-2xl font-bold text-[#222222] mt-1">${analytics.totalRevenue}</p>
+              <span className="text-[11px] text-[#6a6a6a] mt-1 block">Prepaid: {analytics.prepaidCount} | COD: {analytics.codCount}</span>
             </div>
 
-            <div className="p-3.5 bg-slate-900 border border-slate-800 rounded-xl shadow">
-              <span className="text-[11px] text-slate-400 block font-medium">Active In Transit</span>
-              <p className="text-xl font-bold text-cyan-400 mt-1">{analytics.inTransitCount}</p>
-              <span className="text-[10px] text-slate-400">On-road deliveries</span>
+            <div className="p-4 bg-white border border-[#ebebeb] hover:border-[#dddddd] rounded-2xl shadow-xs transition hover:shadow-airbnb">
+              <span className="text-[11px] text-[#6a6a6a] uppercase font-bold tracking-wider block">In Transit</span>
+              <p className="text-2xl font-bold text-[#1a73e8] mt-1">{analytics.inTransitCount}</p>
+              <span className="text-[11px] text-[#6a6a6a] mt-1 block">Active dispatches</span>
             </div>
 
-            <div className="p-3.5 bg-slate-900 border border-slate-800 rounded-xl shadow">
-              <span className="text-[11px] text-slate-400 block font-medium">Delivered (SLA)</span>
-              <p className="text-xl font-bold text-teal-400 mt-1">{analytics.deliveredCount}</p>
-              <span className="text-[10px] text-teal-300 font-mono">{analytics.successRate} Success Rate</span>
+            <div className="p-4 bg-white border border-[#ebebeb] hover:border-[#dddddd] rounded-2xl shadow-xs transition hover:shadow-airbnb">
+              <span className="text-[11px] text-[#6a6a6a] uppercase font-bold tracking-wider block">Delivered SLA</span>
+              <p className="text-2xl font-bold text-[#137333] mt-1">{analytics.deliveredCount}</p>
+              <span className="text-[11px] text-[#137333] font-semibold mt-1 block">{analytics.successRate} Success</span>
             </div>
 
-            <div className="p-3.5 bg-slate-900 border border-slate-800 rounded-xl shadow">
-              <span className="text-[11px] text-slate-400 block font-medium">Failed Attempts</span>
-              <p className="text-xl font-bold text-red-400 mt-1">{analytics.failedCount}</p>
-              <span className="text-[10px] text-purple-300 font-mono">{analytics.rescheduledCount} Rescheduled</span>
+            <div className="p-4 bg-white border border-[#ebebeb] hover:border-[#dddddd] rounded-2xl shadow-xs transition hover:shadow-airbnb">
+              <span className="text-[11px] text-[#6a6a6a] uppercase font-bold tracking-wider block">Exceptions</span>
+              <p className="text-2xl font-bold text-[#c13515] mt-1">{analytics.failedCount}</p>
+              <span className="text-[11px] text-[#460479] font-semibold mt-1 block">{analytics.rescheduledCount} Rescheduled</span>
             </div>
 
-            <div className="p-3.5 bg-slate-900 border border-slate-800 rounded-xl shadow">
-              <span className="text-[11px] text-slate-400 block font-medium">Fleet On Duty</span>
-              <p className="text-xl font-bold text-indigo-400 mt-1">{analytics.activeAgents}</p>
-              <span className="text-[10px] text-slate-400">Agents Online</span>
+            <div className="p-4 bg-white border border-[#ebebeb] hover:border-[#dddddd] rounded-2xl shadow-xs transition hover:shadow-airbnb">
+              <span className="text-[11px] text-[#6a6a6a] uppercase font-bold tracking-wider block">Fleet On Duty</span>
+              <p className="text-2xl font-bold text-[#222222] mt-1">{analytics.activeAgents}</p>
+              <span className="text-[11px] text-[#6a6a6a] mt-1 block">Riders online</span>
             </div>
           </div>
         )}
 
-        {/* Orders Section / Split Screen if an order is selected */}
+        {/* Orders Explorer & Split Screen Detail Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Orders Explorer Table */}
-          <div className={`${selectedOrder ? "lg:col-span-6" : "lg:col-span-12"} space-y-4`}>
-            {/* Filter Bar */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow">
-              <div className="flex flex-wrap items-center gap-2 flex-1">
-                {/* Search */}
-                <div className="relative min-w-[200px] flex-1">
-                  <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-500" />
-                  <input
-                    type="text"
-                    placeholder="Search by Tracking #, Address, Customer..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Status Filter */}
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
-                >
-                  <option value="ALL">All Statuses</option>
-                  <option value="CREATED">Created</option>
-                  <option value="ASSIGNED">Assigned</option>
-                  <option value="PICKED_UP">Picked Up</option>
-                  <option value="IN_TRANSIT">In Transit</option>
-                  <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
-                  <option value="DELIVERED">Delivered</option>
-                  <option value="FAILED">Failed</option>
-                  <option value="RESCHEDULED">Rescheduled</option>
-                </select>
-
-                {/* Order Type Filter */}
-                <select
-                  value={orderTypeFilter}
-                  onChange={(e) => setOrderTypeFilter(e.target.value)}
-                  className="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
-                >
-                  <option value="ALL">All Types</option>
-                  <option value="B2C">B2C Retail</option>
-                  <option value="B2B">B2B Freight</option>
-                </select>
-              </div>
-
+          {/* Left Column: Shipment Cards List */}
+          <div className={`${selectedOrder ? "lg:col-span-6" : "lg:col-span-12"} space-y-3`}>
+            <div className="flex items-center justify-between px-1">
+              <h2 className="text-base font-bold text-[#222222]">
+                Shipment Feed ({orders.length})
+              </h2>
               <button
                 onClick={fetchOrders}
                 disabled={loadingOrders}
-                className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition"
-                title="Refresh Orders"
+                className="w-8 h-8 rounded-full border border-[#dddddd] hover:border-[#222222] flex items-center justify-center text-[#6a6a6a] hover:text-[#222222] transition"
+                title="Refresh Feed"
               >
-                <RefreshCw className={`w-4 h-4 ${loadingOrders ? "animate-spin" : ""}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${loadingOrders ? "animate-spin" : ""}`} />
               </button>
             </div>
 
-            {/* Orders List / Cards */}
+            {/* Orders Feed */}
             {loadingOrders ? (
-              <div className="py-16 text-center text-slate-500 text-xs bg-slate-900/40 rounded-xl border border-slate-800">
-                <RefreshCw className="w-6 h-6 mx-auto animate-spin text-blue-500 mb-2" />
+              <div className="py-16 text-center text-[#6a6a6a] text-xs bg-[#f7f7f7] rounded-2xl border border-[#ebebeb]">
+                <RefreshCw className="w-6 h-6 mx-auto animate-spin text-[#ff385c] mb-2" />
                 <span>Loading shipments...</span>
               </div>
             ) : orders.length === 0 ? (
-              <div className="py-16 text-center text-slate-500 text-xs bg-slate-900/40 rounded-xl border border-slate-800 space-y-2">
-                <Package className="w-8 h-8 mx-auto text-slate-600" />
-                <p>No orders found matching the filter criteria.</p>
+              <div className="py-16 text-center text-[#6a6a6a] text-xs bg-[#f7f7f7] rounded-2xl border border-[#ebebeb] space-y-2">
+                <Package className="w-8 h-8 mx-auto text-[#929292]" />
+                <p className="font-medium text-[#222222]">No shipments found</p>
+                <p className="text-[11px] text-[#6a6a6a]">Try adjusting your search criteria or create a new order.</p>
               </div>
             ) : (
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {orders.map((order) => {
                   const isSelected = selectedOrder?.id === order.id;
                   const isFailed = order.status === "FAILED";
@@ -397,72 +430,72 @@ export default function DashboardPage() {
                     <div
                       key={order.id}
                       onClick={() => setSelectedOrder(order)}
-                      className={`p-4 rounded-xl border transition cursor-pointer shadow-sm ${
+                      className={`p-5 rounded-2xl border transition-all cursor-pointer ${
                         isSelected
-                          ? "bg-slate-850 border-blue-500 ring-2 ring-blue-500/20"
+                          ? "bg-[#f7f7f7] border-[#222222] shadow-airbnb ring-1 ring-[#222222]"
                           : isFailed
-                          ? "bg-slate-900 hover:bg-slate-850 border-red-500/40"
-                          : "bg-slate-900 hover:bg-slate-850 border-slate-800"
+                          ? "bg-white hover:bg-[#f7f7f7]/60 border-[#ffccc7] hover:shadow-airbnb"
+                          : "bg-white hover:bg-[#f7f7f7]/60 border-[#ebebeb] hover:border-[#dddddd] hover:shadow-airbnb"
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="space-y-1">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-1.5 flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono font-bold text-xs text-cyan-400">
+                            <span className="font-mono font-bold text-xs text-[#222222]">
                               #{order.trackingNumber}
                             </span>
-                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-850 text-slate-300 border border-slate-700">
+                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#f2f2f2] text-[#222222]">
                               {order.orderType}
                             </span>
                             <span
-                              className={`text-[10px] px-1.5 py-0.2 rounded ${
+                              className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                                 order.paymentType === "COD"
-                                  ? "bg-amber-500/20 text-amber-300"
-                                  : "bg-emerald-500/20 text-emerald-300"
+                                  ? "bg-[#fff1f0] text-[#ff385c] border border-[#ffd1da]"
+                                  : "bg-[#e6f4ea] text-[#137333] border border-[#ceead6]"
                               }`}
                             >
                               {order.paymentType}
                             </span>
                           </div>
 
-                          <p className="text-xs font-semibold text-white">
-                            {order.pickupArea?.name} ? {order.dropArea?.name}
+                          <p className="text-xs font-semibold text-[#222222]">
+                            {order.pickupArea?.name} → {order.dropArea?.name}
                           </p>
 
-                          <p className="text-[11px] text-slate-400 line-clamp-1">
+                          <p className="text-xs text-[#6a6a6a] line-clamp-1">
                             {order.dropAddress}
                           </p>
                         </div>
 
-                        <div className="text-right space-y-1 shrink-0">
+                        <div className="text-right space-y-1.5 shrink-0">
                           <span
-                            className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            className={`inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${
                               isFailed
-                                ? "bg-red-500/20 text-red-400 border border-red-500/40"
+                                ? "bg-[#fff1f0] text-[#c13515] border border-[#ffccc7]"
                                 : isDelivered
-                                ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                                ? "bg-[#e6f4ea] text-[#137333] border border-[#ceead6]"
                                 : isRescheduled
-                                ? "bg-purple-500/20 text-purple-400 border border-purple-500/40"
-                                : "bg-blue-500/20 text-blue-400 border border-blue-500/40"
+                                ? "bg-[#f8f0fc] text-[#460479] border border-[#e8d5f5]"
+                                : "bg-[#e8f0fe] text-[#1a73e8] border border-[#d2e3fc]"
                             }`}
                           >
                             {order.status}
                           </span>
-                          <span className="text-xs font-bold text-white block">
+                          <span className="text-sm font-bold text-[#222222] block">
                             ${order.totalCharge?.toFixed(2)}
                           </span>
                         </div>
                       </div>
 
-                      {/* Footer info & quick action */}
-                      <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+                      {/* Footer Route Info & Quick Actions */}
+                      <div className="mt-4 pt-3 border-t border-[#ebebeb] flex items-center justify-between text-xs text-[#6a6a6a]">
                         <div className="flex items-center gap-2">
-                          <span className="flex items-center gap-1">
-                            <Truck className="w-3 h-3 text-slate-500" />
+                          <span className="flex items-center gap-1.5 font-medium text-[#222222]">
+                            <Truck className="w-3.5 h-3.5 text-[#6a6a6a]" />
                             {order.agent?.name || "Unassigned"}
                           </span>
-                          <span>�</span>
-                          <span>{order.chargeableWeightKg}kg</span>
+                          <span>•</span>
+                          <span>{order.chargeableWeightKg} kg</span>
                         </div>
 
                         <div className="flex items-center gap-2">
@@ -472,9 +505,9 @@ export default function DashboardPage() {
                                 e.stopPropagation();
                                 handleAutoAssign(order.id);
                               }}
-                              className="px-2 py-0.5 bg-blue-600 hover:bg-blue-500 text-white rounded text-[10px] font-semibold flex items-center gap-1 shadow"
+                              className="px-3 py-1 bg-[#222222] hover:bg-black text-white rounded-full text-[11px] font-semibold flex items-center gap-1 transition active:scale-95 shadow-xs"
                             >
-                              <Sparkles className="w-2.5 h-2.5 text-amber-300" />
+                              <Sparkles className="w-3 h-3 text-[#ff385c]" />
                               <span>Auto-Assign</span>
                             </button>
                           )}
@@ -486,9 +519,9 @@ export default function DashboardPage() {
                                 setOrderToReschedule(order);
                                 setShowRescheduleModal(true);
                               }}
-                              className="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white rounded text-[10px] font-semibold flex items-center gap-1 shadow"
+                              className="px-3 py-1 bg-[#ff385c] hover:bg-[#e00b41] text-white rounded-full text-[11px] font-semibold flex items-center gap-1 transition active:scale-95 shadow-xs"
                             >
-                              <RotateCcw className="w-2.5 h-2.5" />
+                              <RotateCcw className="w-3 h-3" />
                               <span>Reschedule</span>
                             </button>
                           )}
@@ -497,7 +530,7 @@ export default function DashboardPage() {
                             href={`/track/${order.trackingNumber}`}
                             onClick={(e) => e.stopPropagation()}
                             target="_blank"
-                            className="text-slate-400 hover:text-cyan-400 p-1"
+                            className="w-7 h-7 rounded-full flex items-center justify-center text-[#6a6a6a] hover:text-[#222222] hover:bg-[#ebebeb] transition"
                             title="Open Public Tracking Page"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
@@ -511,7 +544,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Right Pane: Selected Order Detail & Interactive LifeCycle Panel */}
+          {/* Right Column: Selected Order Detail Pane */}
           {selectedOrder && (
             <div className="lg:col-span-6 space-y-4">
               {/* Agent Quick Progression Bar */}

@@ -28,7 +28,7 @@ export default function TrackOrderPage() {
       if (res.ok && data.success && data.order) {
         setOrder(data.order);
       } else {
-        setError(data.error || "Order not found with that tracking number.");
+        setError(data.error || "Shipment record not found for that tracking number.");
       }
     } catch (err: any) {
       setError("Failed to communicate with tracking service.");
@@ -52,76 +52,85 @@ export default function TrackOrderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      {/* Top Bar */}
-      <header className="bg-slate-900 border-b border-slate-800 py-3.5 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white">
-              <Package className="w-4 h-4" />
-            </div>
-            <span className="font-bold text-white text-base">
-              LastMile<span className="text-cyan-400">IQ</span>
-            </span>
-          </Link>
+    <div className="min-h-screen bg-white text-[#222222] flex flex-col font-sans">
+      {/* Top Navigation Bar */}
+      <header className="h-20 bg-white border-b border-[#ebebeb] px-4 sm:px-8 sticky top-0 z-30 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-xl bg-[#ff385c] flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+            <Package className="w-5 h-5 stroke-[2.5]" />
+          </div>
+          <span className="font-bold text-[#222222] text-lg tracking-tight">
+            LastMile<span className="text-[#ff385c]">Tracker</span>
+          </span>
+        </Link>
 
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 transition"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Dashboard</span>
-          </Link>
-        </div>
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-xs font-semibold text-[#222222] hover:bg-[#f7f7f7] border border-[#dddddd] px-4 py-2 rounded-full transition shadow-xs"
+        >
+          <ArrowLeft className="w-4 h-4 stroke-[2.2]" />
+          <span>Back to Dashboard</span>
+        </Link>
       </header>
 
       {/* Main Track Container */}
-      <main className="max-w-4xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex-1 space-y-6">
-        {/* Search Header */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl text-center space-y-4">
-          <div>
-            <h1 className="text-2xl font-black text-white tracking-tight">
-              Live Public Shipment Tracking
+      <main className="max-w-4xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex-1 space-y-8">
+        {/* Search Hero Section */}
+        <div className="text-center space-y-5 pt-4 pb-2">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-extrabold text-[#222222] tracking-tight">
+              Live Shipment Tracking
             </h1>
-            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-              Enter your tracking identifier to check delivery milestones, assigned agent status, and reschedule attempts.
+            <p className="text-sm text-[#6a6a6a] max-w-md mx-auto">
+              Real-time delivery progress, milestone audit trail, and customer rescheduling.
             </p>
           </div>
 
-          <form onSubmit={handleSearchSubmit} className="max-w-lg mx-auto flex gap-2">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3 top-3 text-slate-500" />
-              <input
-                type="text"
-                placeholder="e.g. TRK-984210"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 font-mono uppercase"
-                required
-              />
+          {/* Airbnb Signature Pill Search Bar */}
+          <form onSubmit={handleSearchSubmit} className="max-w-xl mx-auto">
+            <div className="flex items-center bg-white border border-[#dddddd] hover:border-[#c1c1c1] focus-within:border-[#222222] rounded-full p-2 pl-6 shadow-airbnb transition-all">
+              <div className="flex-1 text-left">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#222222] block">
+                  Tracking Number
+                </span>
+                <input
+                  type="text"
+                  placeholder="e.g. TRK-984210"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="w-full bg-transparent text-sm font-semibold text-[#222222] placeholder-[#929292] focus:outline-none uppercase font-mono"
+                  required
+                />
+              </div>
+
+              {/* Rausch Search Orb */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-12 h-12 rounded-full bg-[#ff385c] hover:bg-[#e00b41] active:scale-95 text-white flex items-center justify-center shadow-sm transition disabled:opacity-50 shrink-0 ml-2"
+                title="Search Shipment"
+              >
+                {loading ? (
+                  <RefreshCw className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Search className="w-5 h-5 stroke-[2.5]" />
+                )}
+              </button>
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center gap-1.5"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-              <span>Track</span>
-            </button>
           </form>
         </div>
 
         {/* Dynamic State: Loading / Error / Tracking View */}
         {loading ? (
-          <div className="p-12 text-center text-slate-400 space-y-3 bg-slate-900/50 rounded-2xl border border-slate-800">
-            <RefreshCw className="w-8 h-8 mx-auto animate-spin text-cyan-400" />
-            <p className="text-sm">Fetching real-time tracking audit trail...</p>
+          <div className="p-16 text-center text-[#6a6a6a] space-y-3 bg-[#f7f7f7] rounded-2xl border border-[#ebebeb]">
+            <RefreshCw className="w-8 h-8 mx-auto animate-spin text-[#ff385c]" />
+            <p className="text-sm font-medium">Fetching real-time tracking audit trail...</p>
           </div>
         ) : error ? (
-          <div className="p-8 text-center bg-red-500/10 border border-red-500/30 rounded-2xl text-red-300 space-y-2">
-            <AlertCircle className="w-8 h-8 mx-auto text-red-400" />
-            <h3 className="font-bold text-white text-base">Tracking Record Not Found</h3>
-            <p className="text-xs text-red-300">{error}</p>
+          <div className="p-8 text-center bg-[#fff1f0] border border-[#ffccc7] rounded-2xl text-[#c13515] space-y-2">
+            <AlertCircle className="w-8 h-8 mx-auto text-[#c13515]" />
+            <h3 className="font-bold text-[#222222] text-base">Shipment Record Not Found</h3>
+            <p className="text-xs text-[#6a6a6a]">{error}</p>
           </div>
         ) : order ? (
           <div>

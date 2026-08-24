@@ -59,33 +59,33 @@ export const AgentFleetManagerModal: React.FC<AgentFleetManagerModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
+      <div className="bg-white border border-[#dddddd] rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-850">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <Truck className="w-5 h-5" />
+        <div className="p-5 border-b border-[#ebebeb] flex items-center justify-between bg-[#f7f7f7]/60">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#f7f7f7] border border-[#dddddd] text-[#222222] flex items-center justify-center">
+              <Truck className="w-5 h-5 stroke-[2.2]" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Delivery Fleet & Workforce Control</h3>
-              <p className="text-xs text-slate-400">
-                Monitor agent capacity, active loads, zone placements, and availability status.
+              <h3 className="text-base font-bold text-[#222222]">Delivery Fleet & Field Workforce Hub</h3>
+              <p className="text-xs text-[#6a6a6a]">
+                Monitor real-time agent workloads, zone assignments, and dispatch availability.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[#6a6a6a] hover:text-[#222222] hover:bg-[#ebebeb] transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-4 flex-1 text-xs text-slate-300">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-4 flex-1 text-xs text-[#222222]">
           {error && (
-            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300">
+            <div className="p-3.5 bg-[#fff1f0] border border-[#ffccc7] rounded-xl text-[#c13515]">
               {error}
             </div>
           )}
@@ -100,30 +100,30 @@ export const AgentFleetManagerModal: React.FC<AgentFleetManagerModalProps> = ({
               return (
                 <div
                   key={agent.id}
-                  className="p-4 bg-slate-800/40 rounded-xl border border-slate-700/60 space-y-3"
+                  className="p-5 bg-[#f7f7f7] rounded-2xl border border-[#ebebeb] space-y-3.5"
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-bold text-white text-sm">{agent.name}</h4>
-                      <p className="text-[11px] text-slate-400">{agent.email} | {agent.phone || "No phone"}</p>
+                      <h4 className="font-bold text-[#222222] text-sm">{agent.name}</h4>
+                      <p className="text-[11px] text-[#6a6a6a] mt-0.5">{agent.email} • {agent.phone || "No phone"}</p>
                     </div>
 
                     <button
                       onClick={() => toggleAvailability(agent)}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 transition ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition ${
                         agent.isAvailable
-                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30"
-                          : "bg-slate-700 text-slate-400 border border-slate-600 hover:bg-slate-600"
+                          ? "bg-[#e6f4ea] text-[#137333] border border-[#ceead6] hover:bg-[#ceead6]"
+                          : "bg-white text-[#6a6a6a] border border-[#dddddd] hover:bg-[#f2f2f2]"
                       }`}
                     >
                       {agent.isAvailable ? (
                         <>
-                          <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+                          <UserCheck className="w-3.5 h-3.5 text-[#137333]" />
                           <span>Online</span>
                         </>
                       ) : (
                         <>
-                          <UserX className="w-3.5 h-3.5 text-slate-400" />
+                          <UserX className="w-3.5 h-3.5 text-[#6a6a6a]" />
                           <span>Offline</span>
                         </>
                       )}
@@ -131,32 +131,32 @@ export const AgentFleetManagerModal: React.FC<AgentFleetManagerModalProps> = ({
                   </div>
 
                   {/* Zone & Location */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-300 bg-slate-800/80 p-2 rounded-lg">
-                    <span className="flex items-center gap-1 text-cyan-300">
-                      <MapPin className="w-3.5 h-3.5" />
+                  <div className="flex items-center justify-between text-[11px] bg-white p-2.5 rounded-xl border border-[#ebebeb]">
+                    <span className="flex items-center gap-1 text-[#222222] font-semibold">
+                      <MapPin className="w-3.5 h-3.5 text-[#ff385c]" />
                       {agent.currentZone?.name || "Global Zone"}
                     </span>
-                    <span className="font-mono text-[10px] text-slate-400">
-                      Lat: {agent.currentLat || "28.61"} Lng: {agent.currentLng || "77.20"}
+                    <span className="font-mono text-[10px] text-[#6a6a6a]">
+                      GPS: {agent.currentLat || "28.61"}, {agent.currentLng || "77.20"}
                     </span>
                   </div>
 
                   {/* Active Workload Meter */}
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-400">Workload Capacity:</span>
-                      <span className="font-bold text-white font-mono">
-                        {agent.activeDeliveries} / {agent.maxCapacity || 5} active shipments
+                      <span className="text-[#6a6a6a]">Workload Capacity:</span>
+                      <span className="font-bold text-[#222222] font-mono">
+                        {agent.activeDeliveries} / {agent.maxCapacity || 5} active drops
                       </span>
                     </div>
-                    <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-[#ebebeb] rounded-full overflow-hidden">
                       <div
-                        className={`h-full transition-all duration-300 ${
+                        className={`h-full transition-all duration-300 rounded-full ${
                           capacityPercent > 80
-                            ? "bg-red-500"
+                            ? "bg-[#c13515]"
                             : capacityPercent > 50
-                            ? "bg-amber-500"
-                            : "bg-emerald-500"
+                            ? "bg-[#f29900]"
+                            : "bg-[#137333]"
                         }`}
                         style={{ width: `${capacityPercent}%` }}
                       />
@@ -165,18 +165,18 @@ export const AgentFleetManagerModal: React.FC<AgentFleetManagerModalProps> = ({
 
                   {/* Active Orders List preview */}
                   {agent.assignedOrders && agent.assignedOrders.length > 0 && (
-                    <div className="pt-2 border-t border-slate-750 space-y-1">
-                      <span className="text-[10px] text-slate-400 uppercase font-semibold">
+                    <div className="pt-2 border-t border-[#ebebeb] space-y-1.5">
+                      <span className="text-[10px] text-[#6a6a6a] uppercase font-bold tracking-wider block">
                         Assigned Active Routes:
                       </span>
                       <div className="space-y-1">
                         {agent.assignedOrders.map((ord: any) => (
                           <div
                             key={ord.id}
-                            className="flex items-center justify-between text-[10px] bg-slate-850 px-2 py-1 rounded"
+                            className="flex items-center justify-between text-[10px] bg-white px-2.5 py-1.5 rounded-lg border border-[#ebebeb]"
                           >
-                            <span className="font-mono text-cyan-300 font-bold">#{ord.trackingNumber}</span>
-                            <span className="px-1.5 py-0.2 rounded bg-slate-750 text-slate-300">
+                            <span className="font-mono text-[#222222] font-bold">#{ord.trackingNumber}</span>
+                            <span className="px-2 py-0.5 rounded-full bg-[#f2f2f2] text-[#6a6a6a] font-medium">
                               {ord.status}
                             </span>
                           </div>
@@ -191,10 +191,10 @@ export const AgentFleetManagerModal: React.FC<AgentFleetManagerModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-850 flex justify-end">
+        <div className="p-4 border-t border-[#ebebeb] bg-[#f7f7f7]/60 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold"
+            className="px-5 py-2.5 bg-[#222222] hover:bg-black text-white rounded-full text-xs font-semibold transition active:scale-95"
           >
             Close
           </button>

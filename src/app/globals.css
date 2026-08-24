@@ -1,10 +1,55 @@
 @import "tailwindcss";
 
 @layer base {
-  body {
-    background-color: #020617;
-    color: #f8fafc;
+  :root {
+    --color-primary: #ff385c;
+    --color-primary-active: #e00b41;
+    --color-primary-disabled: #ffd1da;
+    --color-primary-error: #c13515;
+    --color-primary-error-hover: #b32505;
+    --color-ink: #222222;
+    --color-body: #3f3f3f;
+    --color-muted: #6a6a6a;
+    --color-muted-soft: #929292;
+    --color-hairline: #dddddd;
+    --color-hairline-soft: #ebebeb;
+    --color-border-strong: #c1c1c1;
+    --color-canvas: #ffffff;
+    --color-surface-soft: #f7f7f7;
+    --color-surface-strong: #f2f2f2;
+    --color-surface-card: #ffffff;
+    --color-on-primary: #ffffff;
   }
+
+  body {
+    background-color: #ffffff;
+    color: #222222;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom input styling matching Airbnb design specs */
+  input, select, textarea {
+    color: #222222;
+  }
+}
+
+/* Airbnb signature shadow */
+.shadow-airbnb {
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 6px 0px, rgba(0, 0, 0, 0.1) 0px 4px 8px 0px;
+}
+
+.shadow-airbnb-hover {
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.08) 0px 6px 16px 0px, rgba(0, 0, 0, 0.12) 0px 10px 24px 0px;
+}
+
+.shadow-pill {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.shadow-pill-hover {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 6px 20px rgba(0,0,0,0.08);
 }
 
 @keyframes fadeIn {
@@ -20,4 +65,20 @@
 
 .animate-fadeIn {
   animation: fadeIn 0.15s ease-out forwards;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #dddddd;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c1c1c1;
 }
