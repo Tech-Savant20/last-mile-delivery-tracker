@@ -1,0 +1,195 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  role          String   @default("CUSTOMER") // ADMIN, CUSTOMER, AGENT
+  phone         String?
+  companyName   String?
+  
+  // Agent specific fields
+  currentZoneId String?
+  currentZone   Zone?    @relation("AgentCurrentZone", fields: [currentZoneId], references: [id])
+  currentLat    Float?
+  currentLng    Float?
+  isAvailable   Boolean  @default(true)
+  maxCapacity   Int      @default(5)
+  activeDeliveries Int   @default(0)
+
+  // Relations
+  customerOrders Order[]         @relation("CustomerOrders")
+  assignedOrders Order[]         @relation("AgentOrders")
+  trackingEvents TrackingEvent[] @relation("ActorTrackingEvents")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Zone {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  code        String   @unique
+  description String?
+  
+  areas       Area[]
+  agents      User[]   @relation("AgentCurrentZone")
+  
+  pickupOrders Order[] @relation("PickupZone")
+  dropOrders   Order[] @relation("DropZone")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Area {
+  id         String   @id @default(cuid())
+  name       String
+  pincode    String
+  zoneId     String
+  zone       Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  defaultLat Float
+  defaultLng Float
+
+  pickupOrders Order[] @relation("PickupArea")
+  dropOrders   Order[] @relation("DropArea")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, pincode])
+}
+
+model RateCard {
+  id              String    @id @default(cuid())
+  orderType       String    // B2B, B2C
+  zoneType        String    // INTRA_ZONE, INTER_ZONE
+  baseWeightKg    Float     @default(0.5)
+  baseRate        Float
+  perExtraKgRate  Float
+  minCharge       Float     @default(0.0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([orderType, zoneType])
+}
+
+model SurchargeConfig {
+  id            String   @id @default(cuid())
+  orderType     String   // B2B, B2C
+  surchargeType String   @default("COD")
+  feeType       String   @default("FIXED") // FIXED, PERCENTAGE
+  feeValue      Float
+  minFee        Float    @default(0.0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([orderType, surchargeType])
+}
+
+model Order {
+  id                 String      @id @default(cuid())
+  trackingNumber     String      @unique
+  customerId         String
+  customer           User        @relation("CustomerOrders", fields: [customerId], references: [id])
+  agentId            String?
+  agent              User?       @relation("AgentOrders", fields: [agentId], references: [id])
+  
+  orderType          String      @default("B2C") // B2B, B2C
+  paymentType        String      @default("PREPAID") // PREPAID, COD
+  declaredValue      Float       @default(0.0)
+  
+  // Package dimensions & weight
+  lengthCm           Float
+  widthCm            Float
+  heightCm           Float
+  actualWeightKg     Float
+  volumetricWeightKg Float
+  chargeableWeightKg Float
+  
+  // Address info
+  pickupAddress      String
+  pickupAreaId       String
+  pickupArea         Area        @relation("PickupArea", fields: [pickupAreaId], references: [id])
+  pickupZoneId       String
+  pickupZone         Zone        @relation("PickupZone", fields: [pickupZoneId], references: [id])
+  
+  dropAddress        String
+  dropAreaId         String
+  dropArea           Area        @relation("DropArea", fields: [dropAreaId], references: [id])
+  dropZoneId         String
+  dropZone           Zone        @relation("DropZone", fields: [dropZoneId], references: [id])
+  
+  // Price breakdown
+  baseShippingCharge Float
+  extraWeightCharge  Float
+  codSurcharge       Float
+  totalCharge        Float
+  
+  // Status
+  status             String      @default("CREATED") // CREATED, ASSIGNED, PICKED_UP, IN_TRANSIT, OUT_FOR_DELIVERY, DELIVERED, FAILED, RESCHEDULED, CANCELLED
+  scheduledDeliveryDate DateTime?
+
+  // Relations
+  trackingEvents     TrackingEvent[]
+  rescheduleRequests RescheduleRequest[]
+  notifications      NotificationLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TrackingEvent {
+  id            String      @id @default(cuid())
+  orderId       String
+  order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status        String
+  actorId       String?
+  actor         User?       @relation("ActorTrackingEvents", fields: [actorId], references: [id])
+  actorRole     String?
+  actorName     String?
+  note          String?
+  failureReason String?
+  locationLat   Float?
+  locationLng   Float?
+  timestamp     DateTime    @default(now())
+}
+
+model RescheduleRequest {
+  id               String           @id @default(cuid())
+  orderId          String
+  order            Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  originalDate     DateTime
+  rescheduledDate  DateTime
+  timeSlot         String?
+  customerNotes    String?
+  status           String           @default("PENDING") // PENDING, ASSIGNED, COMPLETED
+  assignedAgentId  String?
+  
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model NotificationLog {
+  id             String              @id @default(cuid())
+  orderId        String?
+  order          Order?              @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  recipientEmail String?
+  recipientPhone String?
+  channel        String              @default("EMAIL") // EMAIL, SMS
+  subject        String
+  content        String
+  status         String              @default("SENT") // SENT, FAILED, DELIVERED
+  metadata       String?
+  sentAt         DateTime            @default(now())
+}
